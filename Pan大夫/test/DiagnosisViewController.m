@@ -12,6 +12,7 @@
 //#import "TestCell.h"
 #import "TestAnalysisViewController.h"
 //#import "FunnyTestViewController.h"
+#import "FunTestDetailViewController.h"
 
 #import <CoreText/CoreText.h>
 #import <WebKit/WebKit.h>
@@ -24,7 +25,7 @@
 #define ratio5 320/414
 #define TextFont (((FrameH > 567) && (FrameH < 569))? 13 :(((FrameH > 666) && (FrameH < 668))? 15 : (((FrameH > 735) && (FrameH < 737))? 17 : 13)))
 #define cellHeight (((FrameH > 567) && (FrameH < 569))? 160 * ratio5:(((FrameH > 666) && (FrameH < 668))? 160 * ratio6 : (((FrameH > 735) && (FrameH < 737))? 160 : 160 * ratio5)))
-#define offset (((FrameH > 567) && (FrameH < 569))? 157:(((FrameH > 666) && (FrameH < 668))? 163 : (((FrameH > 735) && (FrameH < 737))? 169 : 153)))
+//#define offset (((FrameH > 567) && (FrameH < 569))? 157:(((FrameH > 666) && (FrameH < 668))? 163 : (((FrameH > 735) && (FrameH < 737))? 169 : 153)))
 
 @interface DiagnosisViewController ()
 
@@ -35,7 +36,7 @@
 @property (nonatomic, strong) UISegmentedControl *titleSwitch;
 
 @property (strong , nonatomic) UIView *viewLeft;
-@property (strong , nonatomic) UIView *viewRight;
+@property (strong , nonatomic) UITableView *viewRight;
 @property (strong , nonatomic) UITextView *testTitle;
 
 @property (strong , nonatomic) UIImageView *bt1;
@@ -48,6 +49,9 @@
 @property (strong , nonatomic) NSString *choosedKind;
 @property (strong , nonatomic) NSMutableArray *temp;
 @property (strong , nonatomic) NSString *choosedSubKind;
+
+// 趣味测试通信后本地存储的数据
+@property (nonatomic) NSMutableArray<NSDictionary *> *funTestData;
 
 @property(strong, nonatomic) TestAnalysisViewController *result;
 
@@ -77,62 +81,90 @@
     self.titleSwitch = [[UISegmentedControl alloc] initWithItems:@[@"专业测试", @"趣味测试"]];
     self.titleSwitch.frame = CGRectMake(0, 0, 100, 30);
     self.titleSwitch.selectedSegmentIndex = 0;
-    [self.titleSwitch addTarget:self action:@selector(titleSwitchTappedWithSender:) forControlEvents:UIControlEventTouchUpInside];
+    [self.titleSwitch addTarget:self action:@selector(titleSwitchTappedWithSender:) forControlEvents:UIControlEventValueChanged];
 
     manager = [[CoreDataManager alloc]init];
-    if ([[UIScreen mainScreen]bounds].size.height>479&&[[UIScreen mainScreen]bounds].size.height<481) {
-        buttonLeft = [[UIButton alloc]initWithFrame:CGRectMake(0, 64, [[UIScreen mainScreen]bounds].size.width/2, 40)];
-        [buttonLeft setBackgroundImage:[UIImage imageNamed:@"icon_4s_press_left"] forState:UIControlStateNormal];
-        [buttonLeft addTarget:self action:@selector(buttonLeftTouched) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:buttonLeft];
-        
-        buttonRight = [[UIButton alloc]initWithFrame:CGRectMake([[UIScreen mainScreen]bounds].size.width/2, 64, [[UIScreen mainScreen]bounds].size.width/2, 40)];
-        [buttonRight setBackgroundImage:[UIImage imageNamed:@"icon_4s_unpress_right"] forState:UIControlStateNormal];
-        [buttonRight addTarget:self action:@selector(buttonRightTouched) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:self.buttonRight];
-    }
-    else if([[UIScreen mainScreen]bounds].size.height>567&&[[UIScreen mainScreen]bounds].size.height<570){
-        buttonLeft = [[UIButton alloc]initWithFrame:CGRectMake(0, 64, [[UIScreen mainScreen]bounds].size.width/2, 44)];
-        [buttonLeft setBackgroundImage:[UIImage imageNamed:@"icon_5s_press_left"] forState:UIControlStateNormal];
-        [buttonLeft addTarget:self action:@selector(buttonLeftTouched) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:buttonLeft];
-        
-        buttonRight = [[UIButton alloc]initWithFrame:CGRectMake([[UIScreen mainScreen]bounds].size.width/2, 64, [[UIScreen mainScreen]bounds].size.width/2, 44)];
-        [buttonRight setBackgroundImage:[UIImage imageNamed:@"icon_5s_unpress_right"] forState:UIControlStateNormal];
-        [buttonRight addTarget:self action:@selector(buttonRightTouched) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:self.buttonRight];
-    }
-    else if ([[UIScreen mainScreen]bounds].size.height>666&&[[UIScreen mainScreen]bounds].size.height<670){
-        buttonLeft = [[UIButton alloc]initWithFrame:CGRectMake(0, 64, [[UIScreen mainScreen]bounds].size.width/2, 50)];
-        [buttonLeft setBackgroundImage:[UIImage imageNamed:@"icon_6_press_left"] forState:UIControlStateNormal];
-        [buttonLeft addTarget:self action:@selector(buttonLeftTouched) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:buttonLeft];
-        
-        buttonRight = [[UIButton alloc]initWithFrame:CGRectMake([[UIScreen mainScreen]bounds].size.width/2, 64, [[UIScreen mainScreen]bounds].size.width/2, 50)];
-        [buttonRight setBackgroundImage:[UIImage imageNamed:@"icon_6_unpress_right"] forState:UIControlStateNormal];
-        [buttonRight addTarget:self action:@selector(buttonRightTouched) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:self.buttonRight];
-    }
-    else{
-        buttonLeft = [[UIButton alloc]initWithFrame:CGRectMake(0, 64, [[UIScreen mainScreen]bounds].size.width/2, 56)];
-        [buttonLeft setBackgroundImage:[UIImage imageNamed:@"icon_6_press_left"] forState:UIControlStateNormal];
-        [buttonLeft addTarget:self action:@selector(buttonLeftTouched) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:buttonLeft];
-        
-        buttonRight = [[UIButton alloc]initWithFrame:CGRectMake([[UIScreen mainScreen]bounds].size.width/2, 64, [[UIScreen mainScreen]bounds].size.width/2, 56)];
-        [buttonRight setBackgroundImage:[UIImage imageNamed:@"icon_6_unpress_right"] forState:UIControlStateNormal];
-        [buttonRight addTarget:self action:@selector(buttonRightTouched) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:self.buttonRight];
-    }
+//    if ([[UIScreen mainScreen]bounds].size.height>479&&[[UIScreen mainScreen]bounds].size.height<481) {
+//        buttonLeft = [[UIButton alloc]initWithFrame:CGRectMake(0, 64, [[UIScreen mainScreen]bounds].size.width/2, 40)];
+//        [buttonLeft setBackgroundImage:[UIImage imageNamed:@"icon_4s_press_left"] forState:UIControlStateNormal];
+//        [buttonLeft addTarget:self action:@selector(buttonLeftTouched) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:buttonLeft];
+//        
+//        buttonRight = [[UIButton alloc]initWithFrame:CGRectMake([[UIScreen mainScreen]bounds].size.width/2, 64, [[UIScreen mainScreen]bounds].size.width/2, 40)];
+//        [buttonRight setBackgroundImage:[UIImage imageNamed:@"icon_4s_unpress_right"] forState:UIControlStateNormal];
+//        [buttonRight addTarget:self action:@selector(buttonRightTouched) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:self.buttonRight];
+//    }
+//    else if([[UIScreen mainScreen]bounds].size.height>567&&[[UIScreen mainScreen]bounds].size.height<570){
+//        buttonLeft = [[UIButton alloc]initWithFrame:CGRectMake(0, 64, [[UIScreen mainScreen]bounds].size.width/2, 44)];
+//        [buttonLeft setBackgroundImage:[UIImage imageNamed:@"icon_5s_press_left"] forState:UIControlStateNormal];
+//        [buttonLeft addTarget:self action:@selector(buttonLeftTouched) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:buttonLeft];
+//        
+//        buttonRight = [[UIButton alloc]initWithFrame:CGRectMake([[UIScreen mainScreen]bounds].size.width/2, 64, [[UIScreen mainScreen]bounds].size.width/2, 44)];
+//        [buttonRight setBackgroundImage:[UIImage imageNamed:@"icon_5s_unpress_right"] forState:UIControlStateNormal];
+//        [buttonRight addTarget:self action:@selector(buttonRightTouched) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:self.buttonRight];
+//    }
+//    else if ([[UIScreen mainScreen]bounds].size.height>666&&[[UIScreen mainScreen]bounds].size.height<670){
+//        buttonLeft = [[UIButton alloc]initWithFrame:CGRectMake(0, 64, [[UIScreen mainScreen]bounds].size.width/2, 50)];
+//        [buttonLeft setBackgroundImage:[UIImage imageNamed:@"icon_6_press_left"] forState:UIControlStateNormal];
+//        [buttonLeft addTarget:self action:@selector(buttonLeftTouched) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:buttonLeft];
+//        
+//        buttonRight = [[UIButton alloc]initWithFrame:CGRectMake([[UIScreen mainScreen]bounds].size.width/2, 64, [[UIScreen mainScreen]bounds].size.width/2, 50)];
+//        [buttonRight setBackgroundImage:[UIImage imageNamed:@"icon_6_unpress_right"] forState:UIControlStateNormal];
+//        [buttonRight addTarget:self action:@selector(buttonRightTouched) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:self.buttonRight];
+//    }
+//    else{
+//        buttonLeft = [[UIButton alloc]initWithFrame:CGRectMake(0, 64, [[UIScreen mainScreen]bounds].size.width/2, 56)];
+//        [buttonLeft setBackgroundImage:[UIImage imageNamed:@"icon_6_press_left"] forState:UIControlStateNormal];
+//        [buttonLeft addTarget:self action:@selector(buttonLeftTouched) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:buttonLeft];
+//        
+//        buttonRight = [[UIButton alloc]initWithFrame:CGRectMake([[UIScreen mainScreen]bounds].size.width/2, 64, [[UIScreen mainScreen]bounds].size.width/2, 56)];
+//        [buttonRight setBackgroundImage:[UIImage imageNamed:@"icon_6_unpress_right"] forState:UIControlStateNormal];
+//        [buttonRight addTarget:self action:@selector(buttonRightTouched) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:self.buttonRight];
+//    }
 
     viewFrame =  CGRectMake(0, 64+buttonLeft.frame.size.height, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height-64-49-buttonLeft.frame.size.height);
     rightViewFrame = CGRectMake([[UIScreen mainScreen] bounds].size.width,64+buttonRight.frame.size.height, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height-(64+buttonRight.frame.size.height+49));
     leftViewFrame = CGRectMake(-[[UIScreen mainScreen] bounds].size.width,64+buttonRight.frame.size.height, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height-(64+buttonRight.frame.size.height+49));
     
     self.viewLeft = [[UIView alloc]initWithFrame:viewFrame];//创建左侧视图
-    self.viewRight = [[UIView alloc] initWithFrame:rightViewFrame];//创建右侧视图
+    self.viewRight = [[UITableView alloc] initWithFrame:rightViewFrame];//创建右侧视图
     [self.view addSubview:self.viewLeft];
     [self.view addSubview:self.viewRight];//将左右视图加入到view中
+    
+    // 趣味测试 TableView
+    _viewRight.dataSource = self;
+    _viewRight.delegate = self;
+    [_viewRight registerClass:[UITableViewCell class] forCellReuseIdentifier:@"funTestCell"];
+    _viewRight.rowHeight = UITableViewAutomaticDimension;
+    _viewRight.estimatedRowHeight = 80;
+    
+    NSMutableURLRequest *funTestDataRequest = [[NSMutableURLRequest alloc] initWithURL:[[NSURL alloc] initWithString:@"http://pandoctor.applinzi.com/request.php?request=test"]];
+    [[[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithRequest:funTestDataRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"Httperror: %@%ld", error.localizedDescription, error.code);
+            return;
+        }
+        NSInteger responseCode = [(NSHTTPURLResponse *)response statusCode];
+        NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"HttpResponseCode:%ld", responseCode);
+        NSLog(@"HttpResponseBody %@",responseString);
+        
+        NSDictionary *rawDataDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+        if (![rawDataDictionary objectForKey:@"data"]) {
+            return;
+        }
+        _funTestData = [rawDataDictionary objectForKey:@"data"];
+        
+        [self performSelectorOnMainThread:@selector(reloadFunTestTableView) withObject:nil waitUntilDone:NO];
+        
+    }] resume];
     
 //    UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(bt1Clicked:)];
 //    UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(bt2Clicked:)];
@@ -276,10 +308,25 @@
     self.navigationItem.titleView = _titleSwitch;
 }
 
+/**
+ * 刷新趣味测试 TableView
+ * 用于网络加载回调
+ */
+- (void)reloadFunTestTableView {
+    [_viewRight reloadData];
+}
+
 - (void)titleSwitchTappedWithSender:(UISegmentedControl *)sender {
+    NSLog(@"%ld", sender.selectedSegmentIndex);
     switch (sender.selectedSegmentIndex) {
         case 0:
+            self.viewLeft.frame = viewFrame;
+            self.viewRight.frame = rightViewFrame;
+            break;
             
+        case 1:
+            self.viewLeft.frame = leftViewFrame;
+            self.viewRight.frame = viewFrame;
             break;
             
         default:
@@ -403,11 +450,6 @@
     self.viewRight.frame = rightViewFrame;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex    //设置每个section的cell个数
-{
-    return 19;
-}
-
 
 //
 //- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -454,11 +496,6 @@
     }
     [plistDictionary writeToFile:documentPlistPath atomically:YES];
     [button setImage:[UIImage imageNamed:[testItem objectForKey:@"heart"]] forState:UIControlStateNormal];
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return cellHeight;
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -594,5 +631,57 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return _funTestData.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"funTestCell" forIndexPath:indexPath];
+    
+    // cell 内部布局
+    UILabel *titleLabel = [[UILabel alloc] init];
+    UILabel *detailLabel = [[UILabel alloc] init];
+    [titleLabel setFont:[UIFont boldSystemFontOfSize:17]];
+    [detailLabel setFont:[UIFont systemFontOfSize:13]];
+    titleLabel.numberOfLines = 1;
+    detailLabel.numberOfLines = 4;
+    
+    NSDictionary *data = [_funTestData objectAtIndex:indexPath.row];
+    [titleLabel setText:[data objectForKey:@"title"]];
+    [detailLabel setText:[data objectForKey:@"content"]];
+    
+    [cell.contentView addSubview:titleLabel];
+    [cell.contentView addSubview:detailLabel];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(cell.contentView.mas_top).with.offset(10);
+        make.left.equalTo(cell.contentView.mas_left).with.offset(10);
+        make.right.equalTo(cell.contentView.mas_right).with.offset(-10);
+    }];
+    [detailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(titleLabel.mas_bottom).with.offset(10);
+        make.left.equalTo(cell.contentView.mas_left).with.offset(10);
+        make.right.equalTo(cell.contentView.mas_right).with.offset(-10);
+        make.bottom.equalTo(cell.contentView.mas_bottom).with.offset(-10);
+    }];
+    
+    return cell;
+}
+
+#pragma mark UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    NSString *ID = [[_funTestData objectAtIndex:indexPath.row] objectForKey:@"id"];
+    FunTestDetailViewController *reader = [[FunTestDetailViewController alloc] initWithID:ID];
+    [self.navigationController pushViewController:reader animated:YES];
+}
 
 @end

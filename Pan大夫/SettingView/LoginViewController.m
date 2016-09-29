@@ -101,7 +101,7 @@ int navH;
     
     //创建欢迎登录标签
     welLabel = [[UILabel alloc]initWithFrame:CGRectMake((userImageW - localLabelW)/2, navH + upLabel + userImageH, localLabelW, localLabelH)];
-    welLabel.text = @"您好，登录即可享受潘大夫的服务";
+    welLabel.text = @"您好，登录即可享受大树心理服务";
     welLabel.textColor = [UIColor colorWithRed:115/255.0 green:115/255.0 blue:115/255.0 alpha:1];
     welLabel.font = [UIFont systemFontOfSize:(hitFont+2)];
     
@@ -174,8 +174,8 @@ int navH;
         NSLog(@"~~~~~~~%@", VC);
     }
     
-    int r = arc4random() % 1000000;
-    self.captcha = [NSString stringWithFormat:@"%d", r];
+//    int r = arc4random() % 1000000;
+//    self.captcha = [NSString stringWithFormat:@"%d", r];
     
     return self;
 }
@@ -257,7 +257,7 @@ int navH;
                 return;
             }
             [telField setUserInteractionEnabled:NO];
-            NSString *getCaptchaURL = [NSString stringWithFormat:@"http://1.pandoctor.sinaapp.com/Student/PhoneVerify.php?phone=%@&code=%@", telephone, self.captcha];
+            NSString *getCaptchaURL = [NSString stringWithFormat:@"http://1.pandoctor.sinaapp.com/sendMessage.php?mobile=%@", telephone];
             NSMutableURLRequest *req = [[NSMutableURLRequest alloc] initWithURL:[[NSURL alloc] initWithString:getCaptchaURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
             [req setHTTPMethod:@"GET"];
             
@@ -271,12 +271,7 @@ int navH;
                     NSLog(@"HttpResponseCode:%ld", responseCode);
                     NSLog(@"HttpResponseBody %@",responseString);
                     
-                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-                    if ([dic objectForKey:@"error"]) {
-                        NSLog(@"%@", [dic objectForKey:@"error"]);
-                        return;
-                    }
-                    self.dic = dic;
+                    self.captcha = [responseString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
                 }
             }];
             [dataTask resume];
@@ -447,14 +442,15 @@ int navH;
 
 - (void)checkIfUserHasRecord {
     // 获取信息，是否已经有
-    if (!self.dic) {
-        return;
-    }
-    [self storeInformationAfterLoginSuccess];
-    [self.navigationController popViewControllerAnimated:YES];
-    return;
+//    if (!self.dic) {
+//        NSLog(@"self.dic is nil");
+//        return;
+//    }
+//    [self storeInformationAfterLoginSuccess];
+//    [self.navigationController popViewControllerAnimated:YES];
+//    return;
     
-    NSString *checkURL = [NSString stringWithFormat:@"http://1.pandoctor.sinaapp.com/Student/StuLogin.php?phone=%@", telField.text];
+    NSString *checkURL = [NSString stringWithFormat:@"http://1.pandoctor.sinaapp.com/register.php?order=exist&mobile=%@", telField.text];
     NSMutableURLRequest *checkReq = [[NSMutableURLRequest alloc] initWithURL:[[NSURL alloc] initWithString:checkURL]];
     [checkReq setHTTPMethod:@"GET"];
     
@@ -472,7 +468,7 @@ int navH;
             NSLog(@"HttpResponseBody %@",responseString);
             
             NSDictionary *JSONDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-            if ([JSONDic objectForKey:@"error"]) {
+            if ([responseString isEqualToString:@"0"]) {
                 [self performSelectorOnMainThread:@selector(goAddPersonalInformation) withObject:nil waitUntilDone:NO];
             } else {
 //                [self.navigationController performSelectorOnMainThread:@selector(popViewControllerAnimated:) withObject:@[@YES] waitUntilDone:NO];

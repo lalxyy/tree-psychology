@@ -11,4 +11,6 @@
 
 @interface AllCommentTableViewController : UIViewController
 
+- (instancetype)initWithArticleId:(NSString *)articleId;
+
 @end

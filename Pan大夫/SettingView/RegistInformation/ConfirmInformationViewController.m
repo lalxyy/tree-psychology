@@ -8,6 +8,7 @@
 
 #import "ConfirmInformationViewController.h"
 #import "ConfirmInformationView.h"
+#import "SetNicknameViewController.h"
 
 #import "AppDelegate.h"
 
@@ -56,40 +57,45 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
--(void)commitButtonClicked{
+- (void)commitButtonClicked {
     NSLog(@"commitButtonClicked");
-    // TODO: 在这里添加学生信息添加逻辑
-    NSString *addInformationURL = [NSString stringWithFormat:@"http://1.pandoctor.sinaapp.com/Student/stuAdd.php"];
-    NSString *paramsString = [NSString stringWithFormat:@"phone=%@&name=%@&sex=%@&college=%@&major=%@&studentId=%@", self.phone, self.confirmInformationView.nameLabel.text, self.confirmInformationView.sexLabel.text, self.confirmInformationView.collogeLabel.text, self.confirmInformationView.majorLabel.text, self.confirmInformationView.IDLabel.text];
-    NSData *paramsData = [paramsString dataUsingEncoding:NSUTF8StringEncoding];
-    NSMutableURLRequest *req = [[NSMutableURLRequest alloc] initWithURL:[[NSURL alloc] initWithString:addInformationURL]];
-    [req setHTTPMethod:@"POST"];
-    [req setHTTPBody:paramsData];
+    SetNicknameViewController *setNicknameVC = [[SetNicknameViewController alloc] initWithParentConfirmInformationViewController:self];
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:setNicknameVC] animated:YES completion:nil];
+}
+
+- (void)commitUserInformation {
+//    NSString *addInformationURL = [NSString stringWithFormat:@"http://pandoctor.applinzi.com/register.php"];
+    NSString *paramsString = [NSString stringWithFormat:@"http://pandoctor.applinzi.com/register.php?order=save&mobile=%@&name=%@&sex=%@&college=%@&major=%@&studentID=%@&nickname=%@", [self.phone mk_urlEncodedString], [self.confirmInformationView.nameLabel.text mk_urlEncodedString], [self.confirmInformationView.sexLabel.text mk_urlEncodedString], [self.confirmInformationView.collogeLabel.text mk_urlEncodedString], [self.confirmInformationView.majorLabel.text mk_urlEncodedString], [self.confirmInformationView.IDLabel.text mk_urlEncodedString], [self.nickname mk_urlEncodedString]];
+//    NSData *paramsData = [paramsString dataUsingEncoding:NSUTF8StringEncoding];
+    NSLog(@"%@", paramsString);
+    NSMutableURLRequest *req = [[NSMutableURLRequest alloc] initWithURL:[[NSURL alloc] initWithString:paramsString]];
+//    [req setHTTPMethod:@"POST"];
+//    [req setHTTPBody:paramsData];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:req completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
-            NSLog(@"Httperror: %@%ld", error.localizedDescription, error.code);
+            NSLog(@"Httperror: %@ %ld", error.localizedDescription, error.code);
         } else {
             NSInteger responseCode = [(NSHTTPURLResponse *)response statusCode];
             NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             NSLog(@"HttpResponseCode:%ld", responseCode);
             NSLog(@"HttpResponseBody %@",responseString);
             
-            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-            if ([dic objectForKey:@"succeed"]) {
-                if ((BOOL)[dic objectForKey:@"succeed"] == YES) {
+//            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+//            if ([dic objectForKey:@"succeed"]) {
+//                if ((BOOL)[dic objectForKey:@"succeed"] == YES) {
                     [self storeInformationAfterLoginSuccess];
                     [self.navigationController performSelectorOnMainThread:@selector(popToRootViewControllerAnimated:) withObject:@YES waitUntilDone:NO];
-                } else {
-                    [[[UIAlertView alloc] initWithTitle:@"错误" message:@"遇到未知错误" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil] show];
-                    if ([dic objectForKey:@"result"]) {
-                        NSLog(@"%@", [dic objectForKey:@"result"]);
-                    }
-                }
-            } else {
-                NSLog(@"%@", dic);
-                [[[UIAlertView alloc] initWithTitle:@"错误" message:@"遇到未知错误" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil] show];
-            }
+//                } else {
+//                    [[[UIAlertView alloc] initWithTitle:@"错误" message:@"遇到未知错误" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil] show];
+//                    if ([dic objectForKey:@"result"]) {
+//                        NSLog(@"%@", [dic objectForKey:@"result"]);
+//                    }
+//                }
+//            } else {
+//                NSLog(@"%@", dic);
+//                [[[UIAlertView alloc] initWithTitle:@"错误" message:@"遇到未知错误" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil] show];
+//            }
         }
     }];
     [dataTask resume];

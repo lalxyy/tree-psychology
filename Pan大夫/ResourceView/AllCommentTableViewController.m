@@ -10,21 +10,21 @@
 
 @interface AllCommentTableViewController ()
 
-//@property (nonatomic) NSString *articleId;
+@property (nonatomic) NSString *articleId;
 //@property (nonatomic) NSMutableArray<NComment *> *comments;
-//@property (nonatomic) NSString *userId;
+@property (nonatomic) NSString *userId;
 @end
 
 @implementation AllCommentTableViewController
 
-//- (instancetype)initWithArticleId:(NSString *)articleId  {
-//    self = [super initWithStyle:UITableViewStyleGrouped];
-//    if (self) {
-//        _articleId = articleId;
-//        
-//    }
-//    return self;
-//}
+- (instancetype)initWithArticleId:(NSString *)articleId  {
+    self = [super init];
+    if (self) {
+        _articleId = articleId;
+        
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -32,7 +32,7 @@
     UIWebView* webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     webView.scalesPageToFit = YES;//自动对页面进行缩放以适应屏幕
     [self.view addSubview:webView];
-    NSURL* url = [NSURL URLWithString:@"http://www.baidu.com"];//创建URL
+    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"http://pandoctor.applinzi.com/comment.php?id=%@", _articleId]];//创建URL
     
     NSURLRequest* request = [NSURLRequest requestWithURL:url];//创建NSURLRequest
     

@@ -12,7 +12,11 @@
 
 @property (nonatomic, copy) NSString *phone;
 
+@property (nonatomic) NSString *nickname;
+
 //初始化试图控制器，通过字典传值
 -(id)initWithInformationDictionary:(NSDictionary *)informationDictionary;
+
+- (void)commitUserInformation;
 
 @end

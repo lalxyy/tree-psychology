@@ -40,7 +40,7 @@
     _submitButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _submitButton.frame = CGRectMake(0, 0, 34, 17);
     _submitButton.titleLabel.font = [UIFont systemFontOfSize:17];
-    [_submitButton setTitle:@"确定" forState:UIControlStateNormal];
+    [_submitButton setTitle:@"OK" forState:UIControlStateNormal];
     [_submitButton addTarget:self action:@selector(submitComment) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_submitButton];
     
@@ -54,10 +54,10 @@
 
 - (void)submitComment {
     NSString *commentText = _textView.text;
-    NSString *bodyStr = [NSString stringWithFormat:@"articleId=%@&userId=%@&content=%@", _articleId, _userId, commentText];
-    NSMutableURLRequest *req = [[NSMutableURLRequest alloc] initWithURL:[[NSURL alloc] initWithString:@"http://1/pandoctor.sinaapp.com/Community/Comment/addComment.php"]];
-    [req setHTTPMethod:@"POST"];
-    [req setHTTPBody:[bodyStr dataUsingEncoding:NSUTF8StringEncoding]];
+    NSString *bodyStr = [NSString stringWithFormat:@"articleId=%@&userId=%@&content=%@", _articleId, _userId, [commentText mk_urlEncodedString]];
+    NSMutableURLRequest *req = [[NSMutableURLRequest alloc] initWithURL:[[NSURL alloc] initWithString:[NSString stringWithFormat:@"http://1.pandoctor.sinaapp.com/Community/Comment/addComment.php?%@", bodyStr]]];
+//    [req setHTTPMethod:@"POST"];
+//    [req setHTTPBody:[bodyStr dataUsingEncoding:NSUTF8StringEncoding]];
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:req completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {

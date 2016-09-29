@@ -229,12 +229,22 @@
 
 - (void)goAddComment {
     // TODO: 修改为读取值
-    AddCommentViewController *nextVC = [[AddCommentViewController alloc] initWithArticleId:_Id userId:@"20150000"];
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString *documentsDirectory =[paths objectAtIndex:0];
+    NSString *documentPlistPath = [documentsDirectory stringByAppendingPathComponent:@"login.plist"];//plist文件位置
+    NSMutableDictionary *plistDictionary = [[NSMutableDictionary alloc]initWithContentsOfFile:documentPlistPath];
+    
+    if (![plistDictionary objectForKey:@"login"]) {
+        [[[UIAlertView alloc] initWithTitle:@"未登录" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        return;
+    }
+    
+    AddCommentViewController *nextVC = [[AddCommentViewController alloc] initWithArticleId:_Id userId:[plistDictionary objectForKey:@"login"]];
     [self.navigationController pushViewController:nextVC animated:YES];
 }
 
 - (void)goAllComments {
-    AllCommentTableViewController *nextVC = [AllCommentTableViewController alloc] ;
+    AllCommentTableViewController *nextVC = [[AllCommentTableViewController alloc] initWithArticleId:_Id];
     [self.navigationController pushViewController:nextVC animated:YES];
     
 }
