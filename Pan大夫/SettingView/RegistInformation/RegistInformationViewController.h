@@ -12,4 +12,6 @@
 
 @property (nonatomic, copy) NSString *phone;
 
+@property (nonatomic) BOOL isRoot; // 上一界面传值而来
+
 @end

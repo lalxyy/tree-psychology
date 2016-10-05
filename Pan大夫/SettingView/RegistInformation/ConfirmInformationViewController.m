@@ -116,7 +116,11 @@
 }
 
 - (void)goBackToRoot {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    if (_isRoot) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
 }
 
 -(void)refleshData{

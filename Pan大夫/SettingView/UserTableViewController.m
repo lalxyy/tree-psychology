@@ -153,6 +153,8 @@
             loginViewController.title = @"注册";
             [[self viewController].navigationController pushViewController:loginViewController animated:YES];
             
+            
+            
 //            registinformationViewController = [[RegistInformationViewController alloc]init];
 //            [[self viewController].navigationController pushViewController:registinformationViewController animated:YES];
             

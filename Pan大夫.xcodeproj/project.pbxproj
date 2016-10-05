@@ -15,6 +15,8 @@
 		1D8445F31CC138E600B5E8E4 /* ResrsesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D8445F21CC138E600B5E8E4 /* ResrsesViewController.m */; };
 		1D90F9421D9CABD6005DA157 /* FunTestDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D90F9411D9CABD6005DA157 /* FunTestDetailViewController.m */; };
 		1D90F9451D9D061F005DA157 /* SetNicknameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D90F9441D9D061F005DA157 /* SetNicknameViewController.m */; };
+		1DB0D64E1DA274F4005B71E5 /* PDValidatePhoneNumberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DB0D64D1DA274F4005B71E5 /* PDValidatePhoneNumberViewController.m */; };
+		1DB0D6511DA52327005B71E5 /* PDEnterCaptchaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DB0D6501DA52327005B71E5 /* PDEnterCaptchaViewController.m */; };
 		1DC1F7021CC1D35E00A5E9BF /* NewsTmbnl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DC1F7011CC1D35E00A5E9BF /* NewsTmbnl.m */; };
 		1DC2708A1CDA11FD00E57D3B /* NNewsTmbnlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DC270891CDA11FD00E57D3B /* NNewsTmbnlViewController.m */; };
 		1DD568361D9D6A1F00946AB4 /* NSString+urlencode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DD568351D9D6A1F00946AB4 /* NSString+urlencode.m */; };
@@ -215,6 +217,10 @@
 		1D90F9411D9CABD6005DA157 /* FunTestDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FunTestDetailViewController.m; sourceTree = "<group>"; };
 		1D90F9431D9D061F005DA157 /* SetNicknameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetNicknameViewController.h; sourceTree = "<group>"; };
 		1D90F9441D9D061F005DA157 /* SetNicknameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetNicknameViewController.m; sourceTree = "<group>"; };
+		1DB0D64C1DA274F4005B71E5 /* PDValidatePhoneNumberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDValidatePhoneNumberViewController.h; sourceTree = "<group>"; };
+		1DB0D64D1DA274F4005B71E5 /* PDValidatePhoneNumberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDValidatePhoneNumberViewController.m; sourceTree = "<group>"; };
+		1DB0D64F1DA52327005B71E5 /* PDEnterCaptchaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDEnterCaptchaViewController.h; sourceTree = "<group>"; };
+		1DB0D6501DA52327005B71E5 /* PDEnterCaptchaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDEnterCaptchaViewController.m; sourceTree = "<group>"; };
 		1DC1F7001CC1D35E00A5E9BF /* NewsTmbnl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsTmbnl.h; sourceTree = "<group>"; };
 		1DC1F7011CC1D35E00A5E9BF /* NewsTmbnl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsTmbnl.m; sourceTree = "<group>"; };
 		1DC270881CDA11FD00E57D3B /* NNewsTmbnlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NNewsTmbnlViewController.h; sourceTree = "<group>"; };
@@ -1318,6 +1324,10 @@
 				1D90F9441D9D061F005DA157 /* SetNicknameViewController.m */,
 				1DD568341D9D6A1F00946AB4 /* NSString+urlencode.h */,
 				1DD568351D9D6A1F00946AB4 /* NSString+urlencode.m */,
+				1DB0D64C1DA274F4005B71E5 /* PDValidatePhoneNumberViewController.h */,
+				1DB0D64D1DA274F4005B71E5 /* PDValidatePhoneNumberViewController.m */,
+				1DB0D64F1DA52327005B71E5 /* PDEnterCaptchaViewController.h */,
+				1DB0D6501DA52327005B71E5 /* PDEnterCaptchaViewController.m */,
 			);
 			name = RegistInformation;
 			path = SettingView/RegistInformation;
@@ -1522,8 +1532,10 @@
 				68D574731B95F66300DC4F48 /* SettingsViewController.m in Sources */,
 				68D576501B95FE5B00DC4F48 /* SDWebImageDownloaderOperation.m in Sources */,
 				68D574EB1B95F9EB00DC4F48 /* TestAnalysisViewController.m in Sources */,
+				1DB0D64E1DA274F4005B71E5 /* PDValidatePhoneNumberViewController.m in Sources */,
 				1DD7DBBF1D16AC8B002606ED /* NComment.m in Sources */,
 				68D574B51B95F85A00DC4F48 /* OrderCompletionViewController.m in Sources */,
+				1DB0D6511DA52327005B71E5 /* PDEnterCaptchaViewController.m in Sources */,
 				1DD7DBB91D168B8B002606ED /* AddCommentViewController.m in Sources */,
 				68D576591B95FE5B00DC4F48 /* UIView+WebCacheOperation.m in Sources */,
 				68D574851B95F73C00DC4F48 /* OrderItemViewCell.m in Sources */,

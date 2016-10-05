@@ -14,6 +14,8 @@
 
 @property (nonatomic) NSString *nickname;
 
+@property (nonatomic) BOOL isRoot;
+
 //初始化试图控制器，通过字典传值
 -(id)initWithInformationDictionary:(NSDictionary *)informationDictionary;
 
